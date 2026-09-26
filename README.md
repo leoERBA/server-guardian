@@ -13,7 +13,14 @@ The current development phase is focused on building the secure foundation requi
 ## Project Status
 
 Server Guardian is currently under active development.
+### Verified in development — 2026-09-25
 
+- Restored the missing SELECT permission for service_role on agent_enrollment_tokens.
+- Confirmed successful enrollment through POST /api/agent/enroll with HTTP 200.
+- Confirmed that the response includes a server ID and an sg_agent_ credential.
+- Confirmed that reusing the same enrollment token returns HTTP 401.
+
+These checks validate the tested enrollment and replay-rejection paths. Database hash verification and the remaining enrollment checks are still pending. The Linux agent, installer, and heartbeat are not yet implemented.
 ### Implemented
 
 - User authentication
@@ -30,9 +37,11 @@ Server Guardian is currently under active development.
 
 ### In Progress
 
-- End-to-end validation of the agent enrollment flow
-- Database permission validation for agent enrollment
-- Permanent agent credential validation
+### In Progress
+
+- Verify that the returned agent credential matches the hash stored for the correct server.
+- Verify enrollment token removal in the database.
+- Complete the remaining enrollment validation, including expiration and failure cases.
 
 ### Planned
 
