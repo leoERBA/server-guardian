@@ -1,0 +1,121 @@
+{
+  "started_at": "2026-10-02T21:13:38.136Z",
+  "environment": "isolated native PostgreSQL; synthetic records; no Supabase connection",
+  "migrationPath": "/workspace/scratch/15d99d7b8576/server-guardian-entrega/docs/database/2026-10-02_atomic_agent_enrollment.sql",
+  "tests": [
+    {
+      "name": "migration_applies_and_table_grants_unchanged",
+      "result": "PASS",
+      "duration_ms": 4,
+      "table_grant_rows": 35
+    },
+    {
+      "name": "function_acl_service_role_only",
+      "result": "PASS",
+      "duration_ms": 14,
+      "acl": [
+        {
+          "rolname": "anon",
+          "allowed": false
+        },
+        {
+          "rolname": "authenticated",
+          "allowed": false
+        },
+        {
+          "rolname": "service_role",
+          "allowed": true
+        }
+      ],
+      "properties": {
+        "prosecdef": true,
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "owner": "postgres"
+      }
+    },
+    {
+      "name": "success_stores_exact_hash_and_consumes_token",
+      "result": "PASS",
+      "duration_ms": 8
+    },
+    {
+      "name": "replay_returns_null_preserves_credential",
+      "result": "PASS",
+      "duration_ms": 5
+    },
+    {
+      "name": "expired_token_rejected_and_cleaned",
+      "result": "PASS",
+      "duration_ms": 5
+    },
+    {
+      "name": "used_token_rejected_and_cleaned",
+      "result": "PASS",
+      "duration_ms": 6
+    },
+    {
+      "name": "owner_mismatch_rejected_without_mutation",
+      "result": "PASS",
+      "duration_ms": 5
+    },
+    {
+      "name": "credential_unique_failure_rolls_back_token_delete_and_upsert",
+      "result": "PASS",
+      "duration_ms": 13,
+      "forced_error_sqlstate": "23505",
+      "token_survived_failure": true,
+      "retry_succeeded": true
+    },
+    {
+      "name": "two_connections_same_token_only_one_success",
+      "result": "PASS",
+      "duration_ms": 10,
+      "successes": 1,
+      "rejections": 1
+    },
+    {
+      "name": "two_tokens_same_server_preserves_last_write_wins",
+      "result": "PASS",
+      "duration_ms": 11,
+      "successes": 2,
+      "stored_credentials": 1,
+      "behavior": "last committed reenrollment credential wins"
+    },
+    {
+      "name": "expiration_while_waiting_for_server_lock_rejected",
+      "result": "PASS",
+      "duration_ms": 682,
+      "lock_wait_observed": true
+    },
+    {
+      "name": "server_id_change_during_lock_wait_rejected_without_new_server_mutation",
+      "result": "PASS",
+      "duration_ms": 33,
+      "lock_wait_observed": true,
+      "changed_server_token_preserved": true
+    },
+    {
+      "name": "invalid_hash_inputs_rejected",
+      "result": "PASS",
+      "duration_ms": 21,
+      "cases": 5
+    },
+    {
+      "name": "infinite_expiration_rejected_and_cleaned",
+      "result": "PASS",
+      "duration_ms": 6
+    },
+    {
+      "name": "rls_authenticated_cannot_move_token_to_another_owners_server",
+      "result": "PASS",
+      "duration_ms": 6
+    }
+  ],
+  "postgres_version": "PostgreSQL 17.10 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit",
+  "migration_sha256": "b389c20f487a6acc2b3064905e3170ebebc79b36f97d53e708f3950226afa26d",
+  "finished_at": "2026-10-02T21:13:39.017Z",
+  "passed": 15,
+  "failed": 0
+}

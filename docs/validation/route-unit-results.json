@@ -1,0 +1,98 @@
+{
+  "scope": "Unit tests of provided TypeScript route using Node stripTypeScriptTypes, mocked NextResponse via native Response.json, mocked createAdminClient/RPC, and real node:crypto. Not a Next.js build and not Supabase integration tests.",
+  "node": "v24.19.0",
+  "sourceFile": "/workspace/scratch/15d99d7b8576/server-guardian-entrega/app/api/agent/enroll/route.ts",
+  "sourceSha256": "2c7baeb30f25b86159b50f4affe117162de0956cfa8265cce17f55d7107adf20",
+  "passed": 22,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "malformed JSON returns 400 without admin client or RPC",
+      "status": "passed"
+    },
+    {
+      "name": "missing token returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "null body returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "array body returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "numeric body returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "numeric token returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "null token returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "blank token returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "wrong prefix returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "overlength token returns 401 without RPC",
+      "status": "passed"
+    },
+    {
+      "name": "whitespace trimming hashes the trimmed token",
+      "status": "passed"
+    },
+    {
+      "name": "200 character token reaches RPC",
+      "status": "passed"
+    },
+    {
+      "name": "RPC null result returns 401",
+      "status": "passed"
+    },
+    {
+      "name": "unexpected RPC array returns 500",
+      "status": "passed"
+    },
+    {
+      "name": "unexpected RPC object returns 500",
+      "status": "passed"
+    },
+    {
+      "name": "unexpected RPC undefined returns 500",
+      "status": "passed"
+    },
+    {
+      "name": "unexpected RPC numeric returns 500",
+      "status": "passed"
+    },
+    {
+      "name": "unexpected RPC malformed UUID returns 500",
+      "status": "passed"
+    },
+    {
+      "name": "RPC error returns 500 and logs code only, excluding secret details",
+      "status": "passed"
+    },
+    {
+      "name": "thrown RPC returns 500 and does not log exception secrets",
+      "status": "passed"
+    },
+    {
+      "name": "success returns UUID and new token with matching SHA256 RPC hashes only",
+      "status": "passed"
+    },
+    {
+      "name": "independent successful calls issue distinct agent credentials",
+      "status": "passed"
+    }
+  ]
+}
