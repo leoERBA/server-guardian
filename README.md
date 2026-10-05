@@ -13,14 +13,21 @@ The current development phase is focused on building the secure foundation requi
 ## Project Status
 
 Server Guardian is currently under active development.
+
 ### Verified in development — 2026-09-25
 
 - Restored the missing SELECT permission for service_role on agent_enrollment_tokens.
 - Confirmed successful enrollment through POST /api/agent/enroll with HTTP 200.
 - Confirmed that the response includes a server ID and an sg_agent_ credential.
-- Confirmed that reusing the same enrollment token returns HTTP 401.
+- Confirmed that reusing the same enrollment token sequentially returns HTTP 401.
+- Confirmed that the consumed enrollment token was removed from the database.
+- Confirmed that the SHA-256 hash of the returned agent credential matches the active credential stored for the tested server.
+- Confirmed that exactly one credential record exists for the tested server.
+- Confirmed that requests without a token return HTTP 401.
+- Confirmed that requests with a nonexistent token return HTTP 401.
 
-These checks validate the tested enrollment and replay-rejection paths. Database hash verification and the remaining enrollment checks are still pending. The Linux agent, installer, and heartbeat are not yet implemented.
+These checks validate the tested success path, credential persistence, token consumption, and basic rejection cases in development. They do not establish complete enrollment validation or production readiness.
+
 ### Implemented
 
 - User authentication
@@ -30,28 +37,32 @@ These checks validate the tested enrollment and replay-rejection paths. Database
 - Server dashboard pages
 - Secure enrollment token generation
 - SHA-256 hashing of enrollment tokens
-- 15-minute enrollment token expiration
-- Single-use enrollment flow implemented in the API
-- Initial permanent agent credential generation
+- 15-minute enrollment token expiration logic; expired-token rejection is not yet tested
+- Single-use enrollment flow; sequential replay rejection is verified
+- Initial permanent agent credential generation and hash storage
 - Server-side privileged Supabase client
 
 ### In Progress
 
-### In Progress
-
-- Verify that the returned agent credential matches the hash stored for the correct server.
-- Verify enrollment token removal in the database.
-- Complete the remaining enrollment validation, including expiration and failure cases.
+- Complete enrollment validation.
+- Validate rejection of expired enrollment tokens.
+- Define and test intermediate failure and concurrent-request scenarios.
 
 ### Planned
 
+- Atomic enrollment token consumption and agent credential issuance
+- Rollback validation after atomic enrollment is implemented
+- Authentication of subsequent agent requests
 - Lightweight Linux agent written in Python
+- Secure local agent configuration
 - One-line Bash installer
 - Agent heartbeat system
 - Server health monitoring
 - Security event collection
 - Lightweight rule-based threat detection
 - Alerting and incident visibility
+
+The Linux agent, installer, and heartbeat are not yet implemented.
 
 ---
 
@@ -200,11 +211,20 @@ The agent is intended to remain lightweight and rely on Python's standard librar
 
 - [x] Temporary enrollment token generation
 - [x] Token hashing
-- [x] Token expiration
-- [x] Agent enrollment API
-- [ ] Complete end-to-end enrollment validation
-- [ ] Validate permanent agent credentials
-- [ ] Improve enrollment atomicity
+- [x] 15-minute token expiration logic implemented
+- [x] Agent enrollment API implemented
+- [x] Successful enrollment verified in development
+- [x] Sequential token replay rejection verified
+- [x] Consumed token removal verified
+- [x] Agent credential hash and active record verified for the tested server
+- [x] Missing and nonexistent token rejection verified
+- [x] Expired-token rejection verified
+- [x] Token consumption and credential issuance made atomic
+- [x] Intermediate failure, rollback, and concurrent-request scenarios validated in isolated PostgreSQL tests
+- [x] End-to-end atomic enrollment validated in the real project (12/12 checks)
+- [x] Enrollment token ownership policy hardened and definition verified in Supabase
+- [ ] Validate cross-user isolation with two real user accounts
+- [ ] Implement and validate permanent agent authentication
 
 ### Phase 3 — Linux Agent
 
